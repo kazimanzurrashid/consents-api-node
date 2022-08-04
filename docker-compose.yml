@@ -1,0 +1,39 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:14.4-alpine3.16
+    environment:
+      POSTGRES_PASSWORD: ${PGPASSWORD}
+      POSTGRES_DB: ${PGDATABASE}
+    ports:
+      - "${PGPORT}:${PGPORT}"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: pg_isready -U ${PGUSER} -d ${PGDATABASE}
+      interval: 5s
+      timeout: 1s
+      start_period: 5s
+  api:
+    build: .
+    environment:
+      PGHOST: "postgres"
+      PGPORT: "${PGPORT}"
+      PGUSER: "${PGUSER}"
+      PGPASSWORD: "${PGPASSWORD}"
+      PGDATABASE: "${PGDATABASE}"
+      NODE_ENV: "production"
+      PORT: "${PORT}"
+    ports:
+      - ${PORT}:${PORT}
+    healthcheck:
+      test: node health-check.js
+      interval: 5s
+      timeout: 1s
+      start_period: 5s
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: on-failure
+volumes:
+  postgres-data:
