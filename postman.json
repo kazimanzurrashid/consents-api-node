@@ -209,7 +209,7 @@
 	"variable": [
 		{
 			"key": "ENDPOINT",
-			"value": "http://localhost:5001"
+			"value": "http://localhost:3001"
 		},
 		{
 			"key": "USER_ID",
