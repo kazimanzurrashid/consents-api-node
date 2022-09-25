@@ -13,7 +13,7 @@ services:
       test: pg_isready -U ${PGUSER} -d ${PGDATABASE}
       interval: 5s
       timeout: 1s
-      start_period: 5s
+      start_period: 3s
   api:
     build: .
     environment:
@@ -28,7 +28,7 @@ services:
       - ${PORT}:${PORT}
     healthcheck:
       test: node health-check.js
-      interval: 5s
+      interval: 15s
       timeout: 1s
       start_period: 5s
     depends_on:
