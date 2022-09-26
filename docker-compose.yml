@@ -1,21 +1,26 @@
 version: "3.8"
 services:
   postgres:
-    image: postgres:14.4-alpine3.16
     environment:
-      POSTGRES_PASSWORD: ${PGPASSWORD}
-      POSTGRES_DB: ${PGDATABASE}
-    ports:
-      - "${PGPORT}:${PGPORT}"
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
+      POSTGRES_USER: "${PGUSER}"
+      POSTGRES_PASSWORD: "${PGPASSWORD}"
+      POSTGRES_DB: "${PGDATABASE}"
     healthcheck:
       test: pg_isready -U ${PGUSER} -d ${PGDATABASE}
       interval: 3s
       timeout: 1s
+    image: postgres:14.4-alpine3.16
+    ports:
+      - "${PGPORT}:${PGPORT}"
+    restart: on-failure
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
   api:
     build:
       dockerfile: Dockerfile.dev
+    depends_on:
+      postgres:
+        condition: service_healthy
     environment:
       PGHOST: "postgres"
       PGPORT: "${PGPORT}"
@@ -26,11 +31,8 @@ services:
       PORT: "${PORT}"
     ports:
       - ${PORT}:${PORT}
+    restart: unless-stopped
     volumes:
       - .:/usr/app
-    depends_on:
-      postgres:
-        condition: service_healthy
-    restart: unless-stopped
 volumes:
   postgres-data:
