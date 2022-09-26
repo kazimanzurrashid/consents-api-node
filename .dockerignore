@@ -10,5 +10,6 @@ dist
 coverage
 
 Dockerfile
+Dockerfile.dev
 docker-compose.yml
 .env

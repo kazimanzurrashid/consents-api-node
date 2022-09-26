@@ -11,29 +11,26 @@ services:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
       test: pg_isready -U ${PGUSER} -d ${PGDATABASE}
-      interval: 5s
+      interval: 3s
       timeout: 1s
-      start_period: 3s
   api:
-    build: .
+    build:
+      dockerfile: Dockerfile.dev
     environment:
       PGHOST: "postgres"
       PGPORT: "${PGPORT}"
       PGUSER: "${PGUSER}"
       PGPASSWORD: "${PGPASSWORD}"
       PGDATABASE: "${PGDATABASE}"
-      NODE_ENV: "production"
+      NODE_ENV: "development"
       PORT: "${PORT}"
     ports:
       - ${PORT}:${PORT}
-    healthcheck:
-      test: node health-check.js
-      interval: 15s
-      timeout: 1s
-      start_period: 5s
+    volumes:
+      - .:/usr/app
     depends_on:
       postgres:
         condition: service_healthy
-    restart: on-failure
+    restart: unless-stopped
 volumes:
   postgres-data:

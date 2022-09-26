@@ -1,6 +1,7 @@
-import { readFile } from 'fs/promises';
-
 import 'reflect-metadata';
+
+import { readFile } from 'fs/promises';
+import { join, resolve } from 'path';
 
 import Pino from 'pino';
 import express from 'express';
@@ -45,10 +46,18 @@ const app = express()
   });
 
 (async () => {
-  const schema = await readFile('schema.sql', 'utf-8');
+  const basePath = (() => {
+    if (process.env.NODE_ENV !== 'production') {
+      return join(resolve(), 'src');
+    }
+
+    return resolve();
+  })();
+
+  const schema = await readFile(join(basePath, 'schema.sql'), 'utf-8');
   await container.resolve(PostgreSQL).query(schema);
 
   app.listen(process.env.PORT, () => {
-    logger.info('API Started');
+    logger.info('API Started!');
   });
 })();
