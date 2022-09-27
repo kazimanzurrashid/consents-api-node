@@ -1,0 +1,16 @@
+{
+	"name": "consents-node",
+	"dockerComposeFile": "docker-compose.yml",
+	"service": "api",
+	"workspaceFolder": "/workspace",
+	"forwardPorts": [3001, 5432],
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"dbaeumer.vscode-eslint",
+				"esbenp.prettier-vscode",
+				"EditorConfig.EditorConfig"
+			]
+		}
+	}
+}
