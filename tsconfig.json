@@ -20,7 +20,7 @@
     "sourceMap": true,
     "strict": true,
     "strictNullChecks": false,
-    "target": "ES2018",
+    "target": "ES2021",
     "typeRoots": ["node_modules/@types"]
   }
 }
