@@ -45,6 +45,7 @@ const app = express()
     });
   });
 
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
 (async () => {
   const basePath = (() => {
     if (process.env.NODE_ENV !== 'production') {

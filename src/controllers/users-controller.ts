@@ -1,12 +1,12 @@
 import { injectable } from 'tsyringe';
 
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 
 import Mediator from '../infrastructure/mediator';
 import UserCreateRequest from '../features/user-create/user-create-request';
 import UserDeleteRequest from '../features/user-delete/user-delete-request';
 import UserGetRequest from '../features/user-get/user-get-request';
-import { IUser } from '../features/user';
+import type { IUser } from '../features/user';
 
 @injectable()
 export default class UsersController {

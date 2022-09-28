@@ -1,9 +1,9 @@
 import 'reflect-metadata';
-import { Logger } from 'pino';
+import type { Logger } from 'pino';
 
 import UserCreateRequest from './user-create-request';
-import PostgreSQL from '../../infrastructure/postgre-sql';
-import { IUser } from '../user';
+import type PostgreSQL from '../../infrastructure/postgre-sql';
+import type { IUser } from '../user';
 import UserCreateHandler from './user-create-handler';
 
 describe('UserCreateHandler', () => {

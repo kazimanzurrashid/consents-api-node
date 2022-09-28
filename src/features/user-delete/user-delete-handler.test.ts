@@ -1,9 +1,9 @@
 import 'reflect-metadata';
-import { Logger } from 'pino';
+import type { Logger } from 'pino';
 
 import UserDeleteRequest from './user-delete-request';
 import Id from '../../infrastructure/id';
-import PostgreSQL from '../../infrastructure/postgre-sql';
+import type PostgreSQL from '../../infrastructure/postgre-sql';
 import UserDeleteHandler from './user-delete-handler';
 
 describe('UserDeleteHandler', () => {

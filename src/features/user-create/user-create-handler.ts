@@ -4,7 +4,7 @@ import { Logger } from 'pino';
 import handles from '../../infrastructure/handles';
 import Handler from '../../infrastructure/handler';
 import UserCreateRequest from './user-create-request';
-import { IUser } from '../user';
+import type { IUser } from '../user';
 import PostgreSQL from '../../infrastructure/postgre-sql';
 import Id from '../../infrastructure/id';
 

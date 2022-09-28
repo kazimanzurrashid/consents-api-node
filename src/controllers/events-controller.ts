@@ -1,6 +1,6 @@
 import { injectable } from 'tsyringe';
 
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 
 import Mediator from '../infrastructure/mediator';
 import EventCreateRequest from '../features/event-create/event-create-request';

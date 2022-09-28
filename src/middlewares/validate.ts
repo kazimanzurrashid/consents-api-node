@@ -1,6 +1,6 @@
-import { Schema } from 'joi';
+import type { Schema } from 'joi';
 
-import { NextFunction, Request, Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 
 export default function validate(schema: Schema) {
   return (req: Request, res: Response, next: NextFunction): void => {

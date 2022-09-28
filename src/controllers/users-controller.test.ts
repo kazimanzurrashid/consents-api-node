@@ -1,14 +1,14 @@
 import 'reflect-metadata';
 
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 
 import Id from '../infrastructure/id';
-import { IUser } from '../features/user';
+import type { IUser } from '../features/user';
 import UserCreateRequest from '../features/user-create/user-create-request';
 import UserDeleteRequest from '../features/user-delete/user-delete-request';
 import UserGetRequest from '../features/user-get/user-get-request';
 
-import Mediator from '../infrastructure/mediator';
+import type Mediator from '../infrastructure/mediator';
 import UsersController from './users-controller';
 
 describe('UsersController', () => {

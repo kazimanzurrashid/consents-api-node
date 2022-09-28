@@ -2,8 +2,8 @@ import 'reflect-metadata';
 
 import UserGetRequest from './user-get-request';
 import Id from '../../infrastructure/id';
-import PostgreSQL from '../../infrastructure/postgre-sql';
-import { IUser } from '../user';
+import type PostgreSQL from '../../infrastructure/postgre-sql';
+import type { IUser } from '../user';
 import Consents from '../../consents';
 import UserGetHandler from './user-get-handler';
 

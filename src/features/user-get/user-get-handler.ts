@@ -3,7 +3,7 @@ import { injectable } from 'tsyringe';
 import handles from '../../infrastructure/handles';
 import Handler from '../../infrastructure/handler';
 import UserGetRequest from './user-get-request';
-import { IConsent, IUser } from '../user';
+import type { IConsent, IUser } from '../user';
 import PostgreSQL from '../../infrastructure/postgre-sql';
 import Consents from '../../consents';
 
@@ -25,8 +25,8 @@ export default class UserGetHandler extends Handler<UserGetRequest, IUser> {
     }
 
     const user: IUser = {
-      id: usersResult.rows[0]['id'],
-      email: usersResult.rows[0]['email'],
+      id: usersResult.rows[0].id,
+      email: usersResult.rows[0].email,
       consents: []
     };
 
@@ -54,8 +54,8 @@ export default class UserGetHandler extends Handler<UserGetRequest, IUser> {
 
     user.consents = eventsResult.rows.map((row) => {
       return {
-        id: row['consent_id'] as string,
-        enabled: row['enabled'] as boolean
+        id: row.consent_id as string,
+        enabled: row.enabled as boolean
       } as IConsent;
     });
 

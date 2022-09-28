@@ -1,6 +1,7 @@
-import express, { Request, Response, Router } from 'express';
+import type { Request, Response, Router } from 'express';
+import express from 'express';
 
-import UsersController from '../controllers/users-controller';
+import type UsersController from '../controllers/users-controller';
 import { userCreateRequestSchema } from '../features/user-create/user-create-request';
 import validate from '../middlewares/validate';
 

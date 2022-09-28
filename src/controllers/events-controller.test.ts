@@ -1,12 +1,12 @@
 import 'reflect-metadata';
 
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 
 import Consents from '../consents';
 import Id from '../infrastructure/id';
 import EventCreateRequest from '../features/event-create/event-create-request';
 
-import Mediator from '../infrastructure/mediator';
+import type Mediator from '../infrastructure/mediator';
 import EventsController from './events-controller';
 
 describe('EventsController', () => {

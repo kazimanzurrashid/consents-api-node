@@ -1,10 +1,10 @@
 import 'reflect-metadata';
-import { Logger } from 'pino';
+import type { Logger } from 'pino';
 
 import EventCreateRequest from './event-create-request';
 import Id from '../../infrastructure/id';
 import Consents from '../../consents';
-import PostgreSQL from '../../infrastructure/postgre-sql';
+import type PostgreSQL from '../../infrastructure/postgre-sql';
 import EventCreateHandler from './event-create-handler';
 
 describe('EventCreateHandler', () => {

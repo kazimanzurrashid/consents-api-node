@@ -1,7 +1,7 @@
 import { injectAll, injectable, registry } from 'tsyringe';
 
-import Handler from './handler';
-import Request from './request';
+import type Handler from './handler';
+import type Request from './request';
 
 import UserCreateHandler from '../features/user-create/user-create-handler';
 import UserDeleteHandler from '../features/user-delete/user-delete-handler';

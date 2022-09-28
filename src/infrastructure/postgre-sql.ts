@@ -1,8 +1,9 @@
-import { Pool, QueryResult } from 'pg';
+import type { QueryResult } from 'pg';
+import { Pool } from 'pg';
 import { inject, injectable } from 'tsyringe';
 
 export interface IPostgreSQLBase {
-  query(sql: string, values?: unknown[]): Promise<QueryResult>;
+  query: (sql: string, values?: unknown[]) => Promise<QueryResult>;
 }
 
 @injectable()

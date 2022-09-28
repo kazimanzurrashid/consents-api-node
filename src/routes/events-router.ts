@@ -1,6 +1,7 @@
-import express, { Request, Response, Router } from 'express';
+import type { Request, Response, Router } from 'express';
+import express from 'express';
 
-import EventsController from '../controllers/events-controller';
+import type EventsController from '../controllers/events-controller';
 import validate from '../middlewares/validate';
 import { eventCreateRequestSchema } from '../features/event-create/event-create-request';
 
