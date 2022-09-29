@@ -19,6 +19,11 @@ spec:
         - name: api
           image: kazirashid/consents-node
           env:
+            - name: PGDATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: postgres
+                  key: POSTGRES_DB
             - name: PGUSER
               valueFrom:
                 secretKeyRef:
@@ -29,8 +34,6 @@ spec:
                 secretKeyRef:
                   name: postgres
                   key: POSTGRES_PASSWORD
-            - name: PGDATABASE
-              value: postgres
             - name: PGHOST
               value: postgres
             - name: PGPORT
