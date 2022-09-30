@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: ghcr.io/kazimanzurrashid/consents-node
+          image: ghcr.io/kazimanzurrashid/consents-api-node/consents-node
           env:
             - name: PGDATABASE
               valueFrom:
