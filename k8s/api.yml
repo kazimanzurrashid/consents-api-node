@@ -17,7 +17,8 @@ spec:
     spec:
       containers:
         - name: api
-          image: kazirashid/consents-node
+          image: kazirashid/consents-node:latest
+          imagePullPolicy: Always
           env:
             - name: PGDATABASE
               valueFrom:
