@@ -10,9 +10,20 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
-      - name: Release
+      - name: Install
         run: |
           npm ci --ignore-scripts
-          npm run release
+      - name: Lint
+        run: |
+          npm run format && npm run lint && npm run compile
+      - name: Test
+        run: |
+          npm run coverage
       - name: Upload coverage
         uses: codecov/codecov-action@v3
+      - name: Publish Docker Image
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+        uses: VaultVulp/gp-docker-action@1.2.3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          image-name: consents-node
