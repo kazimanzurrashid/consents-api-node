@@ -48,7 +48,7 @@ spec:
               port: 3001
               path: /
             periodSeconds: 15
-            initialDelaySeconds: 10
+            initialDelaySeconds: 5
             timeoutSeconds: 1
           resources:
             requests:
@@ -77,7 +77,7 @@ spec:
         name: cpu
         target:
           type: Utilization
-          averageUtilization: 80
+          averageUtilization: 70
 ---
 apiVersion: v1
 kind: Service
