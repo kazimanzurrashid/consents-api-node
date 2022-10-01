@@ -13,7 +13,8 @@
     "coverage": "jest --coverage",
     "build": "rimraf build && tsc",
     "pack": "rimraf dist && ncc build --source-map",
-    "release": "npm run build && npm run pack",
+    "copy-other-required-files": "ts-node copy-other-required-files.ts",
+    "release": "npm run build && npm run pack && npm run copy-other-required-files",
     "start": "nodemon src/app.ts"
   },
   "dependencies": {
@@ -23,6 +24,7 @@
     "pg": "^8.8.0",
     "pino": "^8.6.1",
     "reflect-metadata": "^0.1.13",
+    "swagger-ui-express": "^4.5.0",
     "tsyringe": "^4.7.0",
     "uuid": "^9.0.0"
   },
@@ -33,10 +35,12 @@
     "@types/jest": "^29.1.1",
     "@types/node": "^18.7.23",
     "@types/pg": "^8.6.5",
+    "@types/swagger-ui-express": "^4.1.3",
     "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.38.1",
     "@typescript-eslint/parser": "^5.38.1",
     "@vercel/ncc": "^0.34.0",
+    "copy-dir": "^1.3.0",
     "dotenv": "^16.0.3",
     "eslint": "^8.24.0",
     "eslint-config-prettier": "^8.5.0",

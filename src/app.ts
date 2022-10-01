@@ -9,12 +9,13 @@ import { Client, Pool } from 'pg';
 import { container } from 'tsyringe';
 
 import PostgreSQL from './infrastructure/postgre-sql';
-import UsersController from './controllers/users-controller';
-import EventsController from './controllers/events-controller';
 import userRouter from './routes/users-router';
+import UsersController from './controllers/users-controller';
 import eventsRouter from './routes/events-router';
+import EventsController from './controllers/events-controller';
 import healthRouter from './routes/health-router';
 import HealthController from './controllers/health-controller';
+import openApiRouter from './routes/open-api-router';
 
 const logger = Pino();
 
@@ -41,7 +42,8 @@ const app = express()
   .use(express.json())
   .use('/users', userRouter(container.resolve(UsersController)))
   .use('/events', eventsRouter(container.resolve(EventsController)))
-  .use('/health', healthRouter(container.resolve(HealthController)));
+  .use('/health', healthRouter(container.resolve(HealthController)))
+  .use('/', openApiRouter());
 
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
 (async () => {

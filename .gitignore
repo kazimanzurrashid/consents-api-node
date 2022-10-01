@@ -7,3 +7,4 @@ coverage/
 pkg/
 bin/
 .env
+gen/

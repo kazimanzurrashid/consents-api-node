@@ -43,7 +43,9 @@ export default class UsersController {
     const result = await this._mediator.send<IUser, UserGetRequest>(request);
 
     if (!result) {
-      res.status(404).end();
+      res.status(404).json({
+        errors: ['User does not exist!']
+      });
       return;
     }
 

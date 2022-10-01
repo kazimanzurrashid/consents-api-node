@@ -216,7 +216,7 @@ describe('UsersController', () => {
     });
 
     describe('non-existent', () => {
-      let mockedResponseEnd: jest.Mock;
+      let mockedResponseJson: jest.Mock;
       let mockedResponseStatus: jest.Mock;
       let getRequest: UserGetRequest;
 
@@ -237,8 +237,8 @@ describe('UsersController', () => {
           }
         };
 
-        mockedResponseEnd = jest.fn();
-        mockedResponseStatus = jest.fn(() => ({ end: mockedResponseEnd }));
+        mockedResponseJson = jest.fn();
+        mockedResponseStatus = jest.fn(() => ({ json: mockedResponseJson }));
 
         const res = {
           status: mockedResponseStatus
@@ -259,8 +259,8 @@ describe('UsersController', () => {
         expect(mockedResponseStatus).toHaveBeenCalledWith(404);
       });
 
-      it('sends no response', () => {
-        expect(mockedResponseEnd).toHaveBeenCalled();
+      it('sends error', () => {
+        expect(mockedResponseJson).toHaveBeenCalled();
       });
     });
   });
