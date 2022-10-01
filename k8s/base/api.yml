@@ -59,11 +59,11 @@ spec:
             timeoutSeconds: 1
           resources:
             requests:
-              cpu: 50m
-              memory: 300Mi
+              cpu: 0m
+              memory: 0Mi
             limits:
-              cpu: 300m
-              memory: 500Mi
+              cpu: 0m
+              memory: 0Mi
           ports:
             - containerPort: 3001
 ---
@@ -76,8 +76,8 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: api
-  minReplicas: 3
-  maxReplicas: 12
+  minReplicas: 0
+  maxReplicas: 0
   metrics:
     - type: Resource
       resource:

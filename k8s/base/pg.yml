@@ -1,3 +1,4 @@
+---
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -6,7 +7,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   capacity:
-    storage: 100Mi
+    storage: 0Mi
   hostPath:
     path: /data/postgres
   storageClassName: standard
@@ -20,18 +21,15 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 100Mi
+      storage: 0Mi
   volumeName: postgres
 ---
 apiVersion: v1
 kind: Secret
 metadata:
   name: postgres
-type: Opaque
-data:
-  POSTGRES_DB: Y29uc2VudHM=
-  POSTGRES_USER: cG9zdGdyZXM=
-  POSTGRES_PASSWORD: dGVzdDEyMw==
+  labels:
+    app: postgres
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -70,11 +68,11 @@ spec:
                   key: POSTGRES_PASSWORD
           resources:
             requests:
-              cpu: 50m
-              memory: 300Mi
+              cpu: 0m
+              memory: 0Mi
             limits:
-              cpu: 300m
-              memory: 500Mi
+              cpu: 0m
+              memory: 0Mi
           ports:
             - containerPort: 5432
           volumeMounts:
@@ -94,8 +92,8 @@ spec:
     apiVersion: apps/v1
     kind: StatefulSet
     name: postgres
-  minReplicas: 1
-  maxReplicas: 3
+  minReplicas: 0
+  maxReplicas: 0
   metrics:
     - type: Resource
       resource:
