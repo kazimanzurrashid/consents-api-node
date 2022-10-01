@@ -5,7 +5,7 @@ import { join, resolve } from 'path';
 
 import Pino from 'pino';
 import express from 'express';
-import { Pool } from 'pg';
+import { Client, Pool } from 'pg';
 import { container } from 'tsyringe';
 
 import PostgreSQL from './infrastructure/postgre-sql';
@@ -13,6 +13,8 @@ import UsersController from './controllers/users-controller';
 import EventsController from './controllers/events-controller';
 import userRouter from './routes/users-router';
 import eventsRouter from './routes/events-router';
+import healthRouter from './routes/health-router';
+import HealthController from './controllers/health-controller';
 
 const logger = Pino();
 
@@ -23,6 +25,7 @@ const logger = Pino();
   }
 
   container.register('PGPool', { useValue: new Pool() });
+  container.register('PGClient', { useValue: new Client() });
   container.register('Logger', { useValue: logger });
 })();
 
@@ -38,12 +41,7 @@ const app = express()
   .use(express.json())
   .use('/users', userRouter(container.resolve(UsersController)))
   .use('/events', eventsRouter(container.resolve(EventsController)))
-  .get('/', (_, res) => {
-    res.json({
-      uptime: process.uptime(),
-      timestamp: new Date().toISOString()
-    });
-  });
+  .use('/health', healthRouter(container.resolve(HealthController)));
 
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
 (async () => {

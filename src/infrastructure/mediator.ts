@@ -7,12 +7,14 @@ import UserCreateHandler from '../features/user-create/user-create-handler';
 import UserDeleteHandler from '../features/user-delete/user-delete-handler';
 import UserGetHandler from '../features/user-get/user-get-handler';
 import EventCreateHandler from '../features/event-create/event-create-handler';
+import HealthReadinessHandler from '../features/health-readiness/health-readiness-handler';
 
 const registrations = [
   UserCreateHandler,
   UserDeleteHandler,
   UserGetHandler,
-  EventCreateHandler
+  EventCreateHandler,
+  HealthReadinessHandler
 ].map((c) => ({
   token: 'Handler',
   useClass: c
