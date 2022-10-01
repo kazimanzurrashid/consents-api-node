@@ -26,7 +26,7 @@ describe('HealthReadinessHandler', () => {
         };
 
         const handler = new HealthReadinessHandler(
-          postgreSQL as unknown as Client,
+          () => postgreSQL as unknown as Client,
           jest.fn() as unknown as Logger
         );
 
@@ -57,7 +57,7 @@ describe('HealthReadinessHandler', () => {
         };
 
         const handler = new HealthReadinessHandler(
-          postgreSQL as unknown as Client,
+          () => postgreSQL as unknown as Client,
           logger as unknown as Logger
         );
 

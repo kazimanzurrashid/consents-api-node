@@ -26,7 +26,7 @@ const logger = Pino();
   }
 
   container.register('PGPool', { useValue: new Pool() });
-  container.register('PGClient', { useValue: new Client() });
+  container.register('PGClientFactory', { useValue: () => new Client() });
   container.register('Logger', { useValue: logger });
 })();
 

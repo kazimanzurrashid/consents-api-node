@@ -1,5 +1,5 @@
 import { inject, injectable } from 'tsyringe';
-import { Client } from 'pg';
+import type { Client } from 'pg';
 import { Logger } from 'pino';
 
 import handles from '../../infrastructure/handles';
@@ -13,16 +13,17 @@ export default class HealthReadinessHandler extends Handler<
   boolean
 > {
   constructor(
-    @inject('PGClient') private readonly _pg: Client,
+    @inject('PGClientFactory') private readonly _pgFactory: () => Client,
     @inject('Logger') private readonly _logger: Logger
   ) {
     super();
   }
 
   async handle(request: HealthReadinessRequest): Promise<boolean> {
+    const pg = this._pgFactory();
     try {
-      await this._pg.connect();
-      await this._pg.end();
+      await pg.connect();
+      await pg.end();
 
       return true;
     } catch (e) {
