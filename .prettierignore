@@ -3,3 +3,4 @@ build/
 dist/
 coverage/
 gen/
+src/schema.sql
