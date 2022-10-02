@@ -7,7 +7,7 @@
   "scripts": {
     "prepare": "husky install",
     "compile": "tsc --noEmit",
-    "format": "prettier --write ./src/**/*.{ts,js,json}",
+    "format": "prettier --write ./src/**/*",
     "lint": "eslint ./ --fix",
     "test": "jest",
     "coverage": "jest --coverage",
