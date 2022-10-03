@@ -2,7 +2,7 @@
   "name": "consents-api",
   "version": "0.1.0",
   "private": true,
-  "main": "build/src/app.js",
+  "main": "build/src/index.js",
   "license": "MIT",
   "scripts": {
     "prepare": "husky install",
@@ -15,7 +15,7 @@
     "pack": "rimraf dist && ncc build --source-map",
     "copy-other-required-files": "ts-node copy-other-required-files.ts",
     "release": "npm run build && npm run pack && npm run copy-other-required-files",
-    "start": "nodemon src/app.ts"
+    "start": "nodemon src/index.ts"
   },
   "dependencies": {
     "express": "^4.18.1",
