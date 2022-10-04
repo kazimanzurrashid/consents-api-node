@@ -18,6 +18,7 @@ services:
   api:
     build:
       dockerfile: Dockerfile.dev
+    command: npm run start
     environment:
       PGHOST: postgres
       PGPORT: ${PGPORT}
