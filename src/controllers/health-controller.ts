@@ -9,29 +9,27 @@ import HealthReadinessRequest from '../features/health-readiness/health-readines
 export default class HealthController {
   constructor(private readonly _mediator: Mediator) {}
 
-  liveness(_: Request, res: Response): void {
-    res.status(200).json({
-      healthy: true,
-      uptime: process.uptime(),
-      timestamp: new Date().toISOString()
-    });
-  }
+  async status(req: Request, res: Response): Promise<void> {
+    const detail = (() => {
+      return ['True', 'true'].includes(req.query?.detail as string);
+    })();
 
-  async readiness(_: Request, res: Response): Promise<void> {
-    const request = new HealthReadinessRequest({
-      ts: new Date()
-    });
-
-    const result = await this._mediator.send<boolean, HealthReadinessRequest>(
-      request
-    );
-
-    if (!result) {
-      res.status(503).json({
-        healthy: false,
-        timestamp: new Date().toISOString()
+    if (detail) {
+      const request = new HealthReadinessRequest({
+        ts: new Date()
       });
-      return;
+
+      const result = await this._mediator.send<boolean, HealthReadinessRequest>(
+        request
+      );
+
+      if (!result) {
+        res.status(503).json({
+          healthy: false,
+          timestamp: new Date().toISOString()
+        });
+        return;
+      }
     }
 
     res.status(200).json({
