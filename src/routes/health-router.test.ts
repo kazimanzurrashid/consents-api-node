@@ -2,7 +2,7 @@ import type EventsController from '../controllers/health-controller';
 import eventsRouter from './health-router';
 
 describe('healthRouter', () => {
-  describe('/', () => {
+  describe('GET /', () => {
     let mockedControllerStatus: jest.Mock;
     let match;
 
@@ -15,10 +15,6 @@ describe('healthRouter', () => {
       match = router.stack.find(
         (x) => x.route.path === '/' && x.route.methods.get
       );
-    });
-
-    it('handles HTTP GET', () => {
-      expect(match).toBeDefined();
     });
 
     it('delegates to controller status', async () => {

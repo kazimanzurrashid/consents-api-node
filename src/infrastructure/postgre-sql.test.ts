@@ -4,7 +4,7 @@ import type { Pool } from 'pg';
 import PostgreSQL from './postgre-sql';
 
 describe('PostgreSQL', () => {
-  describe('#query', () => {
+  describe('query', () => {
     let mockedQuery: jest.Mock;
 
     beforeAll(async () => {
@@ -22,7 +22,7 @@ describe('PostgreSQL', () => {
     });
   });
 
-  describe('#unit', () => {
+  describe('unit', () => {
     let mockedPoolConnect: jest.Mock;
     let mockedClientRelease: jest.Mock;
 

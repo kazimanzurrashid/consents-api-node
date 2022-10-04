@@ -7,107 +7,154 @@ import type Mediator from '../infrastructure/mediator';
 import HealthController from './health-controller';
 
 describe('HealthController', () => {
-  describe('liveness', () => {
-    describe('success', () => {
-      let mockedResponseStatus: jest.Mock;
+  describe('status', () => {
+    describe('detail', () => {
+      describe('success', () => {
+        let mockedResponseStatus: jest.Mock;
+        let readinessRequest: HealthReadinessRequest;
 
-      beforeAll(() => {
-        const controller = new HealthController({} as unknown as Mediator);
+        beforeAll(async () => {
+          const mockedMediatorSend: jest.Mock = jest.fn(async () =>
+            Promise.resolve(true)
+          );
 
-        const req = {};
+          const mediator = {
+            send: mockedMediatorSend
+          };
 
-        mockedResponseStatus = jest.fn(() => ({ json: jest.fn() }));
+          const controller = new HealthController(
+            mediator as unknown as Mediator
+          );
 
-        const res = {
-          status: mockedResponseStatus
-        };
+          const req = {
+            query: {
+              detail: 'true'
+            }
+          };
 
-        controller.liveness(
-          req as unknown as Request,
-          res as unknown as Response
-        );
+          mockedResponseStatus = jest.fn(() => ({ json: jest.fn() }));
+
+          const res = {
+            status: mockedResponseStatus
+          };
+
+          await controller.status(
+            req as unknown as Request,
+            res as unknown as Response
+          );
+          readinessRequest = mockedMediatorSend.mock.calls[0][0];
+        });
+
+        it('uses mediator', () => {
+          expect(readinessRequest).toBeInstanceOf(HealthReadinessRequest);
+        });
+
+        it('returns http status code ok', () => {
+          expect(mockedResponseStatus).toHaveBeenCalledWith(200);
+        });
       });
 
-      it('returns http status code ok', () => {
-        expect(mockedResponseStatus).toHaveBeenCalledWith(200);
+      describe('fail', () => {
+        let mockedResponseStatus: jest.Mock;
+        let readinessRequest: HealthReadinessRequest;
+
+        beforeAll(async () => {
+          const mockedMediatorSend: jest.Mock = jest.fn(async () =>
+            Promise.resolve(false)
+          );
+
+          const mediator = {
+            send: mockedMediatorSend
+          };
+
+          const controller = new HealthController(
+            mediator as unknown as Mediator
+          );
+
+          const req = {
+            query: {
+              detail: 'true'
+            }
+          };
+
+          mockedResponseStatus = jest.fn(() => ({ json: jest.fn() }));
+
+          const res = {
+            status: mockedResponseStatus
+          };
+
+          await controller.status(
+            req as unknown as Request,
+            res as unknown as Response
+          );
+          readinessRequest = mockedMediatorSend.mock.calls[0][0];
+        });
+
+        it('uses mediator', () => {
+          expect(readinessRequest).toBeInstanceOf(HealthReadinessRequest);
+        });
+
+        it('returns http status code service unavailable', () => {
+          expect(mockedResponseStatus).toHaveBeenCalledWith(503);
+        });
       });
     });
-  });
 
-  describe('readiness', () => {
-    describe('success', () => {
-      let mockedResponseStatus: jest.Mock;
-      let readinessRequest: HealthReadinessRequest;
+    describe('simple', () => {
+      describe('without query string', () => {
+        let mockedResponseStatus: jest.Mock;
 
-      beforeAll(async () => {
-        const mockedMediatorSend: jest.Mock = jest.fn(async () =>
-          Promise.resolve(true)
-        );
+        beforeAll(async () => {
+          const controller = new HealthController({} as unknown as Mediator);
 
-        const mediator = {
-          send: mockedMediatorSend
-        };
+          const req = {
+            query: {}
+          };
 
-        const controller = new HealthController(
-          mediator as unknown as Mediator
-        );
+          mockedResponseStatus = jest.fn(() => ({ json: jest.fn() }));
 
-        const req = {};
+          const res = {
+            status: mockedResponseStatus
+          };
 
-        mockedResponseStatus = jest.fn(() => ({ json: jest.fn() }));
+          await controller.status(
+            req as unknown as Request,
+            res as unknown as Response
+          );
+        });
 
-        const res = {
-          status: mockedResponseStatus
-        };
-
-        await controller.readiness(req as Request, res as unknown as Response);
-        readinessRequest = mockedMediatorSend.mock.calls[0][0];
+        it('returns http status code ok', () => {
+          expect(mockedResponseStatus).toHaveBeenCalledWith(200);
+        });
       });
 
-      it('uses mediator', () => {
-        expect(readinessRequest).toBeInstanceOf(HealthReadinessRequest);
-      });
+      describe('with query string', () => {
+        let mockedResponseStatus: jest.Mock;
 
-      it('returns http status code ok', () => {
-        expect(mockedResponseStatus).toHaveBeenCalledWith(200);
-      });
-    });
+        beforeAll(async () => {
+          const controller = new HealthController({} as unknown as Mediator);
 
-    describe('fail', () => {
-      let mockedResponseStatus: jest.Mock;
-      let readinessRequest: HealthReadinessRequest;
+          const req = {
+            query: {
+              detail: 'false'
+            }
+          };
 
-      beforeAll(async () => {
-        const mockedMediatorSend: jest.Mock = jest.fn(async () =>
-          Promise.resolve(false)
-        );
+          mockedResponseStatus = jest.fn(() => ({ json: jest.fn() }));
 
-        const mediator = {
-          send: mockedMediatorSend
-        };
+          const res = {
+            status: mockedResponseStatus
+          };
 
-        const controller = new HealthController(
-          mediator as unknown as Mediator
-        );
+          await controller.status(
+            req as unknown as Request,
+            res as unknown as Response
+          );
+        });
 
-        const req = {};
-
-        mockedResponseStatus = jest.fn(() => ({ json: jest.fn() }));
-
-        const res = {
-          status: mockedResponseStatus
-        };
-
-        await controller.readiness(req as Request, res as unknown as Response);
-        readinessRequest = mockedMediatorSend.mock.calls[0][0];
-      });
-
-      it('uses mediator', () => {
-        expect(readinessRequest).toBeInstanceOf(HealthReadinessRequest);
-      });
-
-      it('returns http status code service unavailable', () => {
-        expect(mockedResponseStatus).toHaveBeenCalledWith(503);
+        it('returns http status code ok', () => {
+          expect(mockedResponseStatus).toHaveBeenCalledWith(200);
+        });
       });
     });
   });
