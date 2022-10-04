@@ -1,12 +1,20 @@
 import 'reflect-metadata';
 import type { Express } from 'express';
 
+import { container } from 'tsyringe';
+import { Client, Pool } from 'pg';
+import Pino from 'pino';
+
 import createApp from './app';
 
 describe('app', () => {
   let app: Express;
 
   beforeAll(() => {
+    container.register('PGPool', { useValue: new Pool() });
+    container.register('PGClientFactory', { useValue: () => new Client() });
+    container.register('Logger', { useValue: Pino() });
+
     app = createApp();
   });
 

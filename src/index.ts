@@ -4,7 +4,8 @@ import { resolve, join } from 'path';
 import { readFile } from 'fs/promises';
 
 import { container } from 'tsyringe';
-import type { Logger } from 'pino';
+import Pino from 'pino';
+import { Client, Pool } from 'pg';
 
 import PostgreSQL from './infrastructure/postgre-sql';
 import createApp from './app';
@@ -22,12 +23,18 @@ void (async () => {
     return resolve();
   })();
 
+  const logger = Pino();
+
+  container.register('PGPool', { useValue: new Pool() });
+  container.register('PGClientFactory', { useValue: () => new Client() });
+  container.register('Logger', { useValue: logger });
+
   const app = createApp();
 
   const schema = await readFile(join(basePath, 'schema.sql'), 'utf-8');
   await container.resolve(PostgreSQL).query(schema);
 
   app.listen(process.env.PORT, () => {
-    container.resolve<Logger>('Logger').info('API Started!');
+    logger.info('API Started!');
   });
 })();
