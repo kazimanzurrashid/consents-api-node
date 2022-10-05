@@ -271,17 +271,19 @@ describe('integrations', () => {
       let statusCode: number;
       let result: IErrorsResult;
 
-      beforeAll((done) => {
-        const app = createApp();
+      beforeAll(async () => {
+        return new Promise<void>((done) => {
+          const app = createApp();
 
-        server = app.listen(async () => {
-          const id = faker.datatype.uuid();
-          const response = await request(app).get(`/users/${id}`);
+          server = app.listen(async () => {
+            const id = faker.datatype.uuid();
+            const response = await request(app).get(`/users/${id}`);
 
-          statusCode = response.statusCode;
-          result = response.body;
+            statusCode = response.statusCode;
+            result = response.body;
 
-          done();
+            done();
+          });
         });
       });
 
@@ -308,39 +310,41 @@ describe('integrations', () => {
       let user: IUser;
       let statusCode: number;
 
-      beforeAll((done) => {
-        const app = createApp();
+      beforeAll(async () => {
+        return new Promise<void>((done) => {
+          const app = createApp();
 
-        server = app.listen(async () => {
-          let response: Response;
+          server = app.listen(async () => {
+            let response: Response;
 
-          response = await request(app).post('/users').send({
-            email: faker.internet.email().toLowerCase()
-          });
-
-          user = response.body;
-
-          response = await request(app)
-            .post('/events')
-            .send({
-              user: {
-                id: user.id
-              },
-              consents: [
-                {
-                  id: consents.email,
-                  enabled: true
-                },
-                {
-                  id: consents.sms,
-                  enabled: false
-                }
-              ]
+            response = await request(app).post('/users').send({
+              email: faker.internet.email().toLowerCase()
             });
 
-          statusCode = response.statusCode;
+            user = response.body;
 
-          done();
+            response = await request(app)
+              .post('/events')
+              .send({
+                user: {
+                  id: user.id
+                },
+                consents: [
+                  {
+                    id: consents.email,
+                    enabled: true
+                  },
+                  {
+                    id: consents.sms,
+                    enabled: false
+                  }
+                ]
+              });
+
+            statusCode = response.statusCode;
+
+            done();
+          });
         });
       });
 
@@ -366,27 +370,29 @@ describe('integrations', () => {
 
       let statusCode: number;
 
-      beforeAll((done) => {
-        const app = createApp();
+      beforeAll(async () => {
+        return new Promise<void>((done) => {
+          const app = createApp();
 
-        server = app.listen(async () => {
-          const response = await request(app)
-            .post('/events')
-            .send({
-              user: {
-                id: faker.datatype.uuid()
-              },
-              consents: [
-                {
-                  id: consents.email,
-                  enabled: true
-                }
-              ]
-            });
+          server = app.listen(async () => {
+            const response = await request(app)
+              .post('/events')
+              .send({
+                user: {
+                  id: faker.datatype.uuid()
+                },
+                consents: [
+                  {
+                    id: consents.email,
+                    enabled: true
+                  }
+                ]
+              });
 
-          statusCode = response.statusCode;
+            statusCode = response.statusCode;
 
-          done();
+            done();
+          });
         });
       });
 
@@ -408,15 +414,17 @@ describe('integrations', () => {
 
       let statusCode: number;
 
-      beforeAll((done) => {
-        const app = createApp();
+      beforeAll(async () => {
+        return new Promise<void>((done) => {
+          const app = createApp();
 
-        server = app.listen(async () => {
-          const response = await request(app).get('/health');
+          server = app.listen(async () => {
+            const response = await request(app).get('/health');
 
-          statusCode = response.statusCode;
+            statusCode = response.statusCode;
 
-          done();
+            done();
+          });
         });
       });
 
@@ -436,15 +444,17 @@ describe('integrations', () => {
 
       let statusCode: number;
 
-      beforeAll((done) => {
-        const app = createApp();
+      beforeAll(async () => {
+        return new Promise<void>((done) => {
+          const app = createApp();
 
-        server = app.listen(async () => {
-          const response = await request(app).get('/health');
+          server = app.listen(async () => {
+            const response = await request(app).get('/health');
 
-          statusCode = response.statusCode;
+            statusCode = response.statusCode;
 
-          done();
+            done();
+          });
         });
       });
 
@@ -465,20 +475,58 @@ describe('integrations', () => {
 
     let statusCode: number;
 
-    beforeAll((done) => {
-      const app = createApp();
+    beforeAll(async () => {
+      return new Promise<void>((done) => {
+        const app = createApp();
 
-      server = app.listen(async () => {
-        const response = await request(app).get('/');
+        server = app.listen(async () => {
+          const response = await request(app).get('/');
 
-        statusCode = response.statusCode;
+          statusCode = response.statusCode;
 
-        done();
+          done();
+        });
       });
     });
 
     it('responds with http status code 200', () => {
       expect(statusCode).toEqual(200);
+    });
+
+    afterAll(async () => {
+      return new Promise<void>((done) => {
+        server.close(() => done());
+      });
+    });
+  });
+
+  describe('ALL OTHER STUFFS', () => {
+    let server: Server;
+
+    let statusCode: number;
+    let result: IErrorsResult;
+
+    beforeAll(async () => {
+      return new Promise<void>((done) => {
+        const app = createApp();
+
+        server = app.listen(async () => {
+          const response = await request(app).get('/foo-bar');
+
+          statusCode = response.statusCode;
+          result = response.body;
+
+          done();
+        });
+      });
+    });
+
+    it('responds with http status code 404', () => {
+      expect(statusCode).toEqual(404);
+    });
+
+    it('returns error', () => {
+      expect(result.errors).toHaveLength(1);
     });
 
     afterAll(async () => {

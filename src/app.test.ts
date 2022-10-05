@@ -63,4 +63,22 @@ describe('app', () => {
     );
     expect(router).toBeDefined();
   });
+
+  it('handles all other stuffs', () => {
+    const route = app._router.stack.find(
+      (x) => x.name === 'bound dispatch' && x.route.path === '*'
+    );
+
+    expect(route).toBeDefined();
+
+    const mockedJson = jest.fn();
+    const mockedStatus = jest.fn(() => ({ json: mockedJson }));
+
+    route.handle({ method: 'GET' }, { status: mockedStatus }, () => {
+      return;
+    });
+
+    expect(mockedStatus).toHaveBeenCalledWith(404);
+    expect(mockedJson).toHaveBeenCalled();
+  });
 });

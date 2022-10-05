@@ -1,4 +1,4 @@
-import type { Express } from 'express';
+import type { Express, Response } from 'express';
 import express from 'express';
 import type { Logger } from 'pino';
 import { container } from 'tsyringe';
@@ -25,5 +25,10 @@ export default function createApp(): Express {
     .use('/users', userRouter(container.resolve(UsersController)))
     .use('/events', eventsRouter(container.resolve(EventsController)))
     .use('/health', healthRouter(container.resolve(HealthController)))
-    .use('/', openApiRouter());
+    .use('/', openApiRouter())
+    .all('*', (_, res: Response) => {
+      res.status(404).json({
+        errors: ['Resource not found']
+      });
+    });
 }
