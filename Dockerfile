@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 FROM node:16.17.1-alpine3.16 AS builder
 WORKDIR /usr/app
 COPY package*.json ./
