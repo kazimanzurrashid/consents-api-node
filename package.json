@@ -4,13 +4,17 @@
   "private": true,
   "main": "build/src/index.js",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kazimanzurrashid/consents-api-node"
+  },
   "scripts": {
     "prepare": "husky install",
     "compile": "tsc --noEmit",
     "format": "prettier --write ./src/**/*",
     "lint": "eslint ./ --fix",
-    "test": "jest --detectOpenHandles",
-    "coverage": "jest --detectOpenHandles --coverage",
+    "test": "jest",
+    "coverage": "jest --ci --coverage",
     "build": "rimraf build && tsc",
     "pack": "rimraf dist && ncc build --source-map",
     "copy-other-required-files": "ts-node copy-other-required-files.ts",

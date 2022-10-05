@@ -30,7 +30,7 @@ services:
     ports:
       - ${PORT}:${PORT}
     healthcheck:
-      test: wget -q -O - --tries=1 http://localhost:${PORT}/health?detail=true
+      test: wget -q -O - --tries=1 http://localhost:${PORT}/health?detail=yes
       interval: 15s
       timeout: 1s
     restart: unless-stopped

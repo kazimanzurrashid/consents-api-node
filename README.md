@@ -16,5 +16,5 @@
 2. Once the `postgres-0` becomes ready then run `kubectl apply -k k8s/overlays/development -l app=api`
 3. Once api pod is ready then run `minikube service api --url` to get the url
 4. Import `./postman.json` in Postman.
-5. Update the `Endpoint` variable from the collection variable section.
+5. Update the `ENDPOINT` variable from the collection variable section.
 6. Run the collection runner

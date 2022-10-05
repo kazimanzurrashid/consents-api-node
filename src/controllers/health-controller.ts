@@ -11,7 +11,9 @@ export default class HealthController {
 
   async status(req: Request, res: Response): Promise<void> {
     const detail = (() => {
-      return ['True', 'true'].includes(req.query?.detail as string);
+      return ['True', 'true', 'Yes', 'yes', 'y'].includes(
+        req.query?.detail as string
+      );
     })();
 
     if (detail) {

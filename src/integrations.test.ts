@@ -12,6 +12,7 @@ import type { StartedPostgreSqlContainer } from 'testcontainers/dist/modules/pos
 
 import { Client, Pool } from 'pg';
 import request from 'supertest';
+import type { Response } from 'supertest';
 import { faker } from '@faker-js/faker';
 
 import createApp from './app';
@@ -47,25 +48,19 @@ describe('integrations', () => {
       'postgres:14.4-alpine3.16'
     ).start();
 
-    container.register('PGPool', {
-      useValue: new Pool({
-        host: postgresContainer.getHost(),
-        port: postgresContainer.getPort(),
-        database: postgresContainer.getDatabase(),
-        user: postgresContainer.getUsername(),
-        password: postgresContainer.getPassword()
-      })
-    });
+    const config = {
+      host: postgresContainer.getHost(),
+      port: postgresContainer.getPort(),
+      database: postgresContainer.getDatabase(),
+      user: postgresContainer.getUsername(),
+      password: postgresContainer.getPassword()
+    };
 
+    container.register('PGPool', {
+      useValue: new Pool(config)
+    });
     container.register('PGClientFactory', {
-      useValue: () =>
-        new Client({
-          host: postgresContainer.getHost(),
-          port: postgresContainer.getPort(),
-          database: postgresContainer.getDatabase(),
-          user: postgresContainer.getUsername(),
-          password: postgresContainer.getPassword()
-        })
+      useValue: () => new Client(config)
     });
     container.register('Logger', { useValue: Pino() });
 
@@ -84,7 +79,7 @@ describe('integrations', () => {
   });
 
   describe('POST /users', () => {
-    describe('complete new user', () => {
+    describe('new user', () => {
       let server: Server;
 
       let email: string;
@@ -143,7 +138,7 @@ describe('integrations', () => {
           const app = createApp();
 
           server = app.listen(async () => {
-            let response;
+            let response: Response;
 
             response = await request(app).post('/users').send({
               email
@@ -190,7 +185,7 @@ describe('integrations', () => {
         const app = createApp();
 
         server = app.listen(async () => {
-          let response;
+          let response: Response;
 
           response = await request(app).post('/users').send({
             email: faker.internet.email().toLowerCase()
@@ -234,7 +229,7 @@ describe('integrations', () => {
           const app = createApp();
 
           server = app.listen(async () => {
-            let response;
+            let response: Response;
 
             response = await request(app).post('/users').send({
               email
@@ -317,7 +312,7 @@ describe('integrations', () => {
         const app = createApp();
 
         server = app.listen(async () => {
-          let response;
+          let response: Response;
 
           response = await request(app).post('/users').send({
             email: faker.internet.email().toLowerCase()
@@ -326,7 +321,7 @@ describe('integrations', () => {
           user = response.body;
 
           response = await request(app)
-            .post(`/events`)
+            .post('/events')
             .send({
               user: {
                 id: user.id
@@ -376,7 +371,7 @@ describe('integrations', () => {
 
         server = app.listen(async () => {
           const response = await request(app)
-            .post(`/events`)
+            .post('/events')
             .send({
               user: {
                 id: faker.datatype.uuid()
@@ -403,6 +398,92 @@ describe('integrations', () => {
         return new Promise<void>((done) => {
           server.close(() => done());
         });
+      });
+    });
+  });
+
+  describe('GET /health', () => {
+    describe('simple', () => {
+      let server: Server;
+
+      let statusCode: number;
+
+      beforeAll((done) => {
+        const app = createApp();
+
+        server = app.listen(async () => {
+          const response = await request(app).get('/health');
+
+          statusCode = response.statusCode;
+
+          done();
+        });
+      });
+
+      it('responds with http status code 200', () => {
+        expect(statusCode).toEqual(200);
+      });
+
+      afterAll(async () => {
+        return new Promise<void>((done) => {
+          server.close(() => done());
+        });
+      });
+    });
+
+    describe('detail', () => {
+      let server: Server;
+
+      let statusCode: number;
+
+      beforeAll((done) => {
+        const app = createApp();
+
+        server = app.listen(async () => {
+          const response = await request(app).get('/health');
+
+          statusCode = response.statusCode;
+
+          done();
+        });
+      });
+
+      it('responds with http status code 200', () => {
+        expect(statusCode).toEqual(200);
+      });
+
+      afterAll(async () => {
+        return new Promise<void>((done) => {
+          server.close(() => done());
+        });
+      });
+    });
+  });
+
+  describe('GET /', () => {
+    let server: Server;
+
+    let statusCode: number;
+
+    beforeAll((done) => {
+      const app = createApp();
+
+      server = app.listen(async () => {
+        const response = await request(app).get('/');
+
+        statusCode = response.statusCode;
+
+        done();
+      });
+    });
+
+    it('responds with http status code 200', () => {
+      expect(statusCode).toEqual(200);
+    });
+
+    afterAll(async () => {
+      return new Promise<void>((done) => {
+        server.close(() => done());
       });
     });
   });
