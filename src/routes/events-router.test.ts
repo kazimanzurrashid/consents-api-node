@@ -18,7 +18,8 @@ describe('eventsRouter', () => {
     });
 
     it('decorates with validation middleware', () => {
-      expect(match.route.stack).toHaveLength(2);
+      const mw = match.route.stack.find((x) => x.name === 'validateMiddleware');
+      expect(mw).toBeDefined();
     });
 
     it('delegates to controller create', async () => {
