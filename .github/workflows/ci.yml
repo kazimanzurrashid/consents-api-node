@@ -31,8 +31,13 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - id: image-tag
+        name: Get Image Tag
+        run: echo '::set-output name=VALUE::${{ }}'
       - name: Push Image
         uses: docker/build-push-action@v3
         with:
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/consents-node
+          push: ${{ github.event_name == 'push' }}
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/consents-node:${{ steps.image-tag.outputs.VALUE }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/consents-node:latest
