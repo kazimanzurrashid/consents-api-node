@@ -10,4 +10,4 @@ FROM node:16.17.1-alpine3.16
 USER node
 WORKDIR /usr/app
 COPY --chown=node:node --from=builder /usr/app/dist /usr/app/src/schema.sql ./
-ENTRYPOINT ["node", "index.js"]
+CMD ["node", "index.js"]
