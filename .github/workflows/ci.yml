@@ -31,9 +31,10 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - id: image-tag
-        name: Get Image Tag
-        run: '::set-output name=VALUE::${{ node -p "require('./package.json').version" }}'
+      - name: Get Image Tag
+        run: |
+          echo '::set-output name=VALUE::${{ node -p "require('./package.json').version" }}'
+        id: image-tag
       - name: Push Image
         uses: docker/build-push-action@v3
         with:
