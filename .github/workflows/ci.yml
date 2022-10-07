@@ -37,6 +37,10 @@ jobs:
         id: image-meta
         uses: docker/metadata-action@v4
         with:
+          tags: |
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha,format=short
           images: ${{ secrets.DOCKERHUB_USERNAME }}/consents-node
       - name: Push Image
         uses: docker/build-push-action@v3
