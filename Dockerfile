@@ -4,7 +4,7 @@ WORKDIR /usr/app
 COPY package*.json ./
 RUN npm ci --ignore-scripts
 COPY . .
-RUN npm run release
+RUN npm run build && npm run pack && npm run copy-other-required-files
 
 FROM node:16.17.1-alpine3.16
 USER node
