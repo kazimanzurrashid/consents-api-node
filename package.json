@@ -13,6 +13,7 @@
     "compile": "tsc --noEmit",
     "format": "prettier --write ./src/**/*",
     "lint": "eslint ./ --fix",
+    "lint-staged": "lint-staged",
     "test": "jest",
     "coverage": "jest --ci --coverage",
     "build": "rimraf build && tsc",
