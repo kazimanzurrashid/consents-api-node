@@ -10,7 +10,7 @@ podAnnotations: {}
 
 image:
   registry: docker.io
-  repository:  kazirashid/consents-node
+  repository:  kazirashid/consents-api-node
   tag: 0.1.0
   pullPolicy: Always
   pullSecrets: []

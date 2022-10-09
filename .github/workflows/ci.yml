@@ -41,7 +41,7 @@ jobs:
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=sha,format=short,prefix=
-          images: ${{ secrets.DOCKERHUB_USERNAME }}/consents-node
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/consents-api-node
       - name: Push Image
         uses: docker/build-push-action@v3
         with:
