@@ -1,0 +1,12 @@
+apiVersion: v2
+name: consents-api-node
+version: 0.1.0
+description: Sample api to play with k8s and tools
+type: application
+appVersion: "0.1.0"
+sources:
+  - https://github.com/kazimanzurrashid/consents-api-node
+dependencies:
+  - name: postgresql
+    version: 11.9.8
+    repository: https://charts.bitnami.com/bitnami
