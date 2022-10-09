@@ -16,3 +16,4 @@ docker-compose.yml
 k8s
 .husky
 gen
+helm

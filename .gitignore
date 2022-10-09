@@ -8,3 +8,5 @@ pkg/
 bin/
 .env
 gen/
+helm/charts/
+helm/Chart.lock
