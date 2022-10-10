@@ -12,9 +12,9 @@
 
 ## Minikube
 
-1. Open terminal and run `kubectl apply -k k8s/overlays/development -l app=postgres`
-2. Once the `postgres-0` becomes ready then run `kubectl apply -k k8s/overlays/development -l app=api`
-3. Once api pod is ready then run `minikube service api --url` to get the url
+1. Open terminal and run `helm dependencies build ./helm`
+2. Once build then run `helm install <your release name> ./helm`
+3. Once the pods are ready then run `minikube service <your release name> --url` to get the url
 4. Import `./postman.json` in Postman.
 5. Update the `ENDPOINT` variable from the collection variable section.
 6. Run the collection runner
