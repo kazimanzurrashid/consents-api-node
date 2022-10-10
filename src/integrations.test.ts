@@ -39,13 +39,13 @@ async function deleteUser(id: string): Promise<void> {
 }
 
 describe('integrations', () => {
-  jest.setTimeout(1000 * 30);
+  jest.setTimeout(1000 * 300);
 
   let postgresContainer: StartedPostgreSqlContainer;
 
   beforeAll(async () => {
     postgresContainer = await new PostgreSqlContainer(
-      'postgres:14.4-alpine3.16'
+      'postgres:14.5-alpine3.16'
     ).start();
 
     const config = {
