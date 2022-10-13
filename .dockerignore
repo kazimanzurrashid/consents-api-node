@@ -13,7 +13,6 @@ Dockerfile
 Dockerfile.dev
 docker-compose.yml
 .env
-k8s
 .husky
 gen
 helm
