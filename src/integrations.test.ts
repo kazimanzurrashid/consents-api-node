@@ -1,16 +1,16 @@
 import 'reflect-metadata';
 
 import { readFile } from 'fs/promises';
-import { join, resolve } from 'path';
-import type { Server } from 'http';
 
+import { join as fsJoin, resolve as fsResolve } from 'path';
+import type { Express } from 'express';
 import Pino from 'pino';
 import { container } from 'tsyringe';
+import { Client, Pool } from 'pg';
 
 import { PostgreSqlContainer } from 'testcontainers';
 import type { StartedPostgreSqlContainer } from 'testcontainers/dist/modules/postgresql/postgresql-container';
 
-import { Client, Pool } from 'pg';
 import request from 'supertest';
 import type { Response } from 'supertest';
 import { faker } from '@faker-js/faker';
@@ -35,6 +35,33 @@ async function usePostgreSQL(
 async function deleteUser(id: string): Promise<void> {
   await usePostgreSQL(async (client) => {
     await client.query('DELETE FROM "users" WHERE id = $1', [id]);
+  });
+}
+
+async function runApp(action: (a: Express) => Promise<void>): Promise<void> {
+  return new Promise<void>((resolve, reject) => {
+    try {
+      const app = createApp();
+
+      const server = app.listen(async () => {
+        try {
+          await action(app);
+
+          server.close((err) => {
+            if (err) {
+              reject(err);
+              return;
+            }
+
+            resolve();
+          });
+        } catch (e) {
+          reject(e);
+        }
+      });
+    } catch (e) {
+      reject(e);
+    }
   });
 }
 
@@ -66,12 +93,12 @@ describe('integrations', () => {
 
     const basePath = (() => {
       if (process.env.NODE_ENV !== 'production') {
-        return join(resolve(), 'src');
+        return fsJoin(fsResolve(), 'src');
       }
-      return resolve();
+      return fsResolve();
     })();
 
-    const schema = await readFile(join(basePath, 'schema.sql'), 'utf-8');
+    const schema = await readFile(fsJoin(basePath, 'schema.sql'), 'utf-8');
 
     await usePostgreSQL(async (client) => {
       await client.query(schema);
@@ -80,29 +107,19 @@ describe('integrations', () => {
 
   describe('POST /users', () => {
     describe('new user', () => {
-      let server: Server;
-
-      let email: string;
+      const email = faker.internet.email().toLowerCase();
 
       let statusCode: number;
       let result: IUser;
 
       beforeAll(async () => {
-        return new Promise<void>((done) => {
-          email = faker.internet.email().toLowerCase();
-
-          const app = createApp();
-
-          server = app.listen(async () => {
-            const response = await request(app).post('/users').send({
-              email
-            });
-
-            statusCode = response.statusCode;
-            result = response.body;
-
-            done();
+        await runApp(async (app) => {
+          const response = await request(app).post('/users').send({
+            email
           });
+
+          statusCode = response.statusCode;
+          result = response.body;
         });
       });
 
@@ -117,44 +134,39 @@ describe('integrations', () => {
       });
 
       afterAll(async () => {
-        await deleteUser(result.id);
-        return new Promise<void>((done) => {
-          server.close(() => done());
-        });
+        if (result) {
+          await deleteUser(result.id);
+        }
       });
     });
 
     describe('already registered user', () => {
-      let server: Server;
+      let existingUserId: string;
 
       let statusCode: number;
-      let existingUser: IUser;
       let result: IErrorsResult;
 
       beforeAll(async () => {
-        return new Promise<void>((done) => {
+        await runApp(async (app) => {
           const email = faker.internet.email().toLowerCase();
 
-          const app = createApp();
+          let response: Response;
 
-          server = app.listen(async () => {
-            let response: Response;
-
-            response = await request(app).post('/users').send({
+          response = await request(app)
+            .post('/users')
+            .send({
               email
-            });
+            })
+            .expect(201);
 
-            existingUser = response.body;
+          existingUserId = response.body.id;
 
-            response = await request(app).post('/users').send({
-              email
-            });
-
-            statusCode = response.statusCode;
-            result = response.body;
-
-            done();
+          response = await request(app).post('/users').send({
+            email
           });
+
+          statusCode = response.statusCode;
+          result = response.body;
         });
       });
 
@@ -167,83 +179,58 @@ describe('integrations', () => {
       });
 
       afterAll(async () => {
-        await deleteUser(existingUser.id);
-        return new Promise<void>((done) => {
-          server.close(() => done());
-        });
+        if (existingUserId) {
+          await deleteUser(existingUserId);
+        }
       });
     });
   });
 
   describe('DELETE /users/:id', () => {
-    let server: Server;
-
     let statusCode: number;
 
     beforeAll(async () => {
-      return new Promise<void>((done) => {
-        const app = createApp();
+      await runApp(async (app) => {
+        let response: Response;
 
-        server = app.listen(async () => {
-          let response: Response;
-
-          response = await request(app).post('/users').send({
-            email: faker.internet.email().toLowerCase()
-          });
-
-          const existingUserId = response.body.id as string;
-
-          response = await request(app).delete(`/users/${existingUserId}`);
-
-          statusCode = response.statusCode;
-
-          done();
+        response = await request(app).post('/users').send({
+          email: faker.internet.email().toLowerCase()
         });
+
+        const existingUserId = response.body.id as string;
+
+        response = await request(app).delete(`/users/${existingUserId}`);
+
+        statusCode = response.statusCode;
       });
     });
 
     it('responds with http status code 204', () => {
       expect(statusCode).toEqual(204);
     });
-
-    afterAll(async () => {
-      return new Promise<void>((done) => {
-        server.close(() => done());
-      });
-    });
   });
 
   describe('GET /users/:id', () => {
     describe('existent user', () => {
-      let server: Server;
-
-      let email: string;
+      const email = faker.internet.email().toLowerCase();
 
       let statusCode: number;
       let result: IUser;
 
       beforeAll(async () => {
-        return new Promise<void>((done) => {
-          email = faker.internet.email().toLowerCase();
+        await runApp(async (app) => {
+          let response: Response;
 
-          const app = createApp();
-
-          server = app.listen(async () => {
-            let response: Response;
-
-            response = await request(app).post('/users').send({
-              email
-            });
-
-            const existingUserId = response.body.id as string;
-
-            response = await request(app).get(`/users/${existingUserId}`);
-
-            statusCode = response.statusCode;
-            result = response.body;
-
-            done();
+          response = await request(app).post('/users').send({
+            email
           });
+
+          const existingUserId = response.body.id as string;
+
+          response = await request(app).get(`/users/${existingUserId}`);
+
+          statusCode = response.statusCode;
+          result = response.body;
         });
       });
 
@@ -258,32 +245,24 @@ describe('integrations', () => {
       });
 
       afterAll(async () => {
-        await deleteUser(result.id);
-        return new Promise<void>((done) => {
-          server.close(() => done());
-        });
+        if (result) {
+          await deleteUser(result.id);
+        }
       });
     });
 
     describe('non-existent user', () => {
-      let server: Server;
-
       let statusCode: number;
       let result: IErrorsResult;
 
       beforeAll(async () => {
-        return new Promise<void>((done) => {
-          const app = createApp();
+        await runApp(async (app) => {
+          const response = await request(app).get(
+            `/users/${faker.datatype.uuid()}`
+          );
 
-          server = app.listen(async () => {
-            const id = faker.datatype.uuid();
-            const response = await request(app).get(`/users/${id}`);
-
-            statusCode = response.statusCode;
-            result = response.body;
-
-            done();
-          });
+          statusCode = response.statusCode;
+          result = response.body;
         });
       });
 
@@ -294,57 +273,46 @@ describe('integrations', () => {
       it('returns error', () => {
         expect(result.errors).toHaveLength(1);
       });
-
-      afterAll(async () => {
-        return new Promise<void>((done) => {
-          server.close(() => done());
-        });
-      });
     });
   });
 
   describe('POST /events', () => {
     describe('known user', () => {
-      let server: Server;
-
       let user: IUser;
       let statusCode: number;
 
       beforeAll(async () => {
-        return new Promise<void>((done) => {
-          const app = createApp();
+        await runApp(async (app) => {
+          let response: Response;
 
-          server = app.listen(async () => {
-            let response: Response;
-
-            response = await request(app).post('/users').send({
+          response = await request(app)
+            .post('/users')
+            .send({
               email: faker.internet.email().toLowerCase()
+            })
+            .expect(201);
+
+          user = response.body;
+
+          response = await request(app)
+            .post('/events')
+            .send({
+              user: {
+                id: user.id
+              },
+              consents: [
+                {
+                  id: consents.email,
+                  enabled: true
+                },
+                {
+                  id: consents.sms,
+                  enabled: false
+                }
+              ]
             });
 
-            user = response.body;
-
-            response = await request(app)
-              .post('/events')
-              .send({
-                user: {
-                  id: user.id
-                },
-                consents: [
-                  {
-                    id: consents.email,
-                    enabled: true
-                  },
-                  {
-                    id: consents.sms,
-                    enabled: false
-                  }
-                ]
-              });
-
-            statusCode = response.statusCode;
-
-            done();
-          });
+          statusCode = response.statusCode;
         });
       });
 
@@ -353,171 +321,109 @@ describe('integrations', () => {
       });
 
       afterAll(async () => {
+        if (!user) {
+          return;
+        }
+
         await usePostgreSQL(async (client) => {
           await client.query('DELETE FROM "events" WHERE user_id = $1', [
             user.id
           ]);
         });
+
         await deleteUser(user.id);
-        return new Promise<void>((done) => {
-          server.close(() => done());
-        });
       });
     });
 
     describe('unknown user', () => {
-      let server: Server;
-
       let statusCode: number;
 
       beforeAll(async () => {
-        return new Promise<void>((done) => {
-          const app = createApp();
+        await runApp(async (app) => {
+          const response = await request(app)
+            .post('/events')
+            .send({
+              user: {
+                id: faker.datatype.uuid()
+              },
+              consents: [
+                {
+                  id: consents.email,
+                  enabled: true
+                }
+              ]
+            });
 
-          server = app.listen(async () => {
-            const response = await request(app)
-              .post('/events')
-              .send({
-                user: {
-                  id: faker.datatype.uuid()
-                },
-                consents: [
-                  {
-                    id: consents.email,
-                    enabled: true
-                  }
-                ]
-              });
-
-            statusCode = response.statusCode;
-
-            done();
-          });
+          statusCode = response.statusCode;
         });
       });
 
       it('responds with http status code 422', () => {
         expect(statusCode).toEqual(422);
       });
-
-      afterAll(async () => {
-        return new Promise<void>((done) => {
-          server.close(() => done());
-        });
-      });
     });
   });
 
   describe('GET /health', () => {
     describe('simple', () => {
-      let server: Server;
-
       let statusCode: number;
 
       beforeAll(async () => {
-        return new Promise<void>((done) => {
-          const app = createApp();
+        await runApp(async (app) => {
+          const response = await request(app).get('/health');
 
-          server = app.listen(async () => {
-            const response = await request(app).get('/health');
-
-            statusCode = response.statusCode;
-
-            done();
-          });
+          statusCode = response.statusCode;
         });
       });
 
       it('responds with http status code 200', () => {
         expect(statusCode).toEqual(200);
-      });
-
-      afterAll(async () => {
-        return new Promise<void>((done) => {
-          server.close(() => done());
-        });
       });
     });
 
     describe('detail', () => {
-      let server: Server;
-
       let statusCode: number;
 
       beforeAll(async () => {
-        return new Promise<void>((done) => {
-          const app = createApp();
+        await runApp(async (app) => {
+          const response = await request(app).get('/health');
 
-          server = app.listen(async () => {
-            const response = await request(app).get('/health');
-
-            statusCode = response.statusCode;
-
-            done();
-          });
+          statusCode = response.statusCode;
         });
       });
 
       it('responds with http status code 200', () => {
         expect(statusCode).toEqual(200);
-      });
-
-      afterAll(async () => {
-        return new Promise<void>((done) => {
-          server.close(() => done());
-        });
       });
     });
   });
 
   describe('GET /', () => {
-    let server: Server;
-
     let statusCode: number;
 
     beforeAll(async () => {
-      return new Promise<void>((done) => {
-        const app = createApp();
+      await runApp(async (app) => {
+        const response = await request(app).get('/');
 
-        server = app.listen(async () => {
-          const response = await request(app).get('/');
-
-          statusCode = response.statusCode;
-
-          done();
-        });
+        statusCode = response.statusCode;
       });
     });
 
     it('responds with http status code 200', () => {
       expect(statusCode).toEqual(200);
     });
-
-    afterAll(async () => {
-      return new Promise<void>((done) => {
-        server.close(() => done());
-      });
-    });
   });
 
   describe('ALL OTHER STUFFS', () => {
-    let server: Server;
-
     let statusCode: number;
     let result: IErrorsResult;
 
     beforeAll(async () => {
-      return new Promise<void>((done) => {
-        const app = createApp();
+      await runApp(async (app) => {
+        const response = await request(app).get('/foo-bar');
 
-        server = app.listen(async () => {
-          const response = await request(app).get('/foo-bar');
-
-          statusCode = response.statusCode;
-          result = response.body;
-
-          done();
-        });
+        statusCode = response.statusCode;
+        result = response.body;
       });
     });
 
@@ -528,16 +434,10 @@ describe('integrations', () => {
     it('returns error', () => {
       expect(result.errors).toHaveLength(1);
     });
-
-    afterAll(async () => {
-      return new Promise<void>((done) => {
-        server.close(() => done());
-      });
-    });
   });
 
   afterAll(async () => {
     await container.resolve<Pool>('PGPool').end();
-    await postgresContainer.stop();
+    await postgresContainer?.stop();
   });
 });
