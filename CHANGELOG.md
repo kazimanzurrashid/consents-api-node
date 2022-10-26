@@ -1,5 +1,7 @@
 # Changelog
 
+## [0.1.1](https://github.com/kazimanzurrashid/consents-api-node/compare/0.1.0...0.1.1) (2022-10-26)
+
 ## 0.1.0 (2022-10-06)
 
 
