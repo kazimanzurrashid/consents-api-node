@@ -14,11 +14,11 @@ export default class PostgreSQL implements PostgreSQL {
     return this._pg.query(sql, values);
   }
 
-  async unit<T>(func: (client: IPostgreSQLBase) => Promise<T>): Promise<T> {
+  async unit<T>(action: (client: IPostgreSQLBase) => Promise<T>): Promise<T> {
     const client = await this._pg.connect();
 
     try {
-      return await func(client);
+      return await action(client);
     } finally {
       client.release();
     }
