@@ -1,24 +1,25 @@
-apiVersion: skaffold/v2beta29
+apiVersion: skaffold/v3
 kind: Config
 metadata:
   name: consents-api-node
 build:
+  artifacts:
+  - image: docker.io/kazirashid/consents-api-node
+    docker:
+      dockerfile: Dockerfile
   tagPolicy:
     gitCommit:
       variant: AbbrevCommitSha
-  artifacts:
-    - image: docker.io/kazirashid/consents-api-node
-      docker:
-        dockerfile: Dockerfile
   local:
     push: true
-deploy:
+manifests:
   helm:
     releases:
-      - name: consents-api-node
-        chartPath: helm
-        artifactOverrides:
-          image: docker.io/kazirashid/consents-api-node
-        imageStrategy:
-          helm:
-            explicitRegistry: true
+    - name: consents-api-node
+      chartPath: helm
+      setValueTemplates:
+        image.registry: '{{.IMAGE_DOMAIN}}'
+        image.repository: '{{.IMAGE_REPO_NO_DOMAIN}}'
+        image.tag: '{{.IMAGE_TAG}}@{{.IMAGE_DIGEST}}'
+deploy:
+  helm: {}
