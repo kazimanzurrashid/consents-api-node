@@ -1,12 +1,12 @@
 # syntax=docker/dockerfile:1
-FROM node:18.12.0-alpine3.16 AS builder
+FROM node:lts-alpine AS builder
 WORKDIR /usr/app
 COPY package*.json ./
 RUN npm ci --ignore-scripts
 COPY . .
 RUN npm run build && npm run pack && npm run copy-other-required-files
 
-FROM node:18.12.0-alpine3.16
+FROM node:lts-alpine
 USER node
 WORKDIR /usr/app
 COPY --chown=node:node --from=builder /usr/app/dist /usr/app/src/schema.sql ./
