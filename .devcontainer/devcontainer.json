@@ -12,5 +12,6 @@
 				"EditorConfig.EditorConfig"
 			]
 		}
-	}
+	},
+	"postStartCommand": "npm install"
 }
