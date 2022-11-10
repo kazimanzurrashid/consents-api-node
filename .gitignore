@@ -11,3 +11,4 @@ gen/
 helm/charts/
 helm/Chart.lock
 .iac-data/
+.dccache
