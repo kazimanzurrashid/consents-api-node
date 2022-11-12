@@ -1,17 +1,23 @@
 {
-	"name": "consents-node",
-	"dockerComposeFile": "docker-compose.yml",
-	"service": "api",
-	"workspaceFolder": "/workspace",
-	"forwardPorts": [3001, 8082],
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"dbaeumer.vscode-eslint",
-				"esbenp.prettier-vscode",
-				"EditorConfig.EditorConfig"
-			]
-		}
-	},
-	"postStartCommand": "npm install"
+  "name": "consents-node",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "api",
+  "workspaceFolder": "/workspace",
+  "forwardPorts": [3001, 8082],
+  "features": {
+    "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {
+      "version": "latest"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "EditorConfig.EditorConfig"
+      ]
+    }
+  },
+  "initializeCommand": "cp .env.dev .env",
+  "postStartCommand": "npm install"
 }
