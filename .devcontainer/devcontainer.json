@@ -18,6 +18,6 @@
       ]
     }
   },
-  "initializeCommand": "cp .env.dev .env",
+  "initializeCommand": "cp .env.dev .devcontainer/.env",
   "postStartCommand": "npm install"
 }
