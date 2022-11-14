@@ -4,6 +4,11 @@
   "service": "api",
   "workspaceFolder": "/workspace",
   "forwardPorts": [3001, 8082],
+  "features": {
+    "ghcr.io/devcontainers/features/kubectl-helm-minikube:1": {
+      "version": "latest"
+    }
+  },
   "customizations": {
     "vscode": {
       "extensions": [
