@@ -42,12 +42,8 @@
         },
         "url": {
           "raw": "{{ENDPOINT}}/users",
-          "host": [
-            "{{ENDPOINT}}"
-          ],
-          "path": [
-            "users"
-          ]
+          "host": ["{{ENDPOINT}}"],
+          "path": ["users"]
         }
       },
       "response": []
@@ -74,12 +70,8 @@
         },
         "url": {
           "raw": "{{ENDPOINT}}/events",
-          "host": [
-            "{{ENDPOINT}}"
-          ],
-          "path": [
-            "events"
-          ]
+          "host": ["{{ENDPOINT}}"],
+          "path": ["events"]
         }
       },
       "response": []
@@ -106,12 +98,8 @@
         },
         "url": {
           "raw": "{{ENDPOINT}}/events",
-          "host": [
-            "{{ENDPOINT}}"
-          ],
-          "path": [
-            "events"
-          ]
+          "host": ["{{ENDPOINT}}"],
+          "path": ["events"]
         }
       },
       "response": []
@@ -141,13 +129,8 @@
         },
         "url": {
           "raw": "{{ENDPOINT}}/users/{{USER_ID}}",
-          "host": [
-            "{{ENDPOINT}}"
-          ],
-          "path": [
-            "users",
-            "{{USER_ID}}"
-          ]
+          "host": ["{{ENDPOINT}}"],
+          "path": ["users", "{{USER_ID}}"]
         }
       },
       "response": []
@@ -187,13 +170,8 @@
         },
         "url": {
           "raw": "{{ENDPOINT}}/users/{{USER_ID}}",
-          "host": [
-            "{{ENDPOINT}}"
-          ],
-          "path": [
-            "users",
-            "{{USER_ID}}"
-          ]
+          "host": ["{{ENDPOINT}}"],
+          "path": ["users", "{{USER_ID}}"]
         }
       },
       "response": []
@@ -204,18 +182,14 @@
       "listen": "prerequest",
       "script": {
         "type": "text/javascript",
-        "exec": [
-          ""
-        ]
+        "exec": [""]
       }
     },
     {
       "listen": "test",
       "script": {
         "type": "text/javascript",
-        "exec": [
-          ""
-        ]
+        "exec": [""]
       }
     }
   ],

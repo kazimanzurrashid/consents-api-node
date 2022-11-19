@@ -7,9 +7,7 @@
   "paths": {
     "/users": {
       "post": {
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "summary": "Creates a new user",
         "requestBody": {
           "content": {
@@ -65,9 +63,7 @@
         }
       ],
       "delete": {
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "summary": "Deletes the user",
         "responses": {
           "204": {
@@ -86,9 +82,7 @@
         }
       },
       "get": {
-        "tags": [
-          "Users"
-        ],
+        "tags": ["Users"],
         "summary": "Returns the user",
         "responses": {
           "200": {
@@ -116,9 +110,7 @@
     },
     "/events": {
       "post": {
-        "tags": [
-          "Events"
-        ],
+        "tags": ["Events"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -146,10 +138,7 @@
                         "id": {
                           "type": "string",
                           "required": true,
-                          "enum": [
-                            "email_notifications",
-                            "sms_notifications"
-                          ]
+                          "enum": ["email_notifications", "sms_notifications"]
                         },
                         "enabled": {
                           "type": "boolean",
