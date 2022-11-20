@@ -1,4 +1,4 @@
-version: "3.8"
+version: '3.8'
 services:
   api:
     build:
@@ -13,7 +13,7 @@ services:
       NODE_ENV: development
       PORT: ${PORT}
     ports:
-      - "${PORT}:${PORT}"
+      - '${PORT}:${PORT}'
     restart: unless-stopped
     volumes:
       - .:/usr/app
@@ -26,7 +26,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_LOGIN_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_LOGIN_PASSWORD}
     ports:
-      - "${PGADMIN_PORT}:80"
+      - '${PGADMIN_PORT}:80'
     volumes:
       - pg-admin-data:/var/lib/pgadmin
   postgres:
@@ -36,7 +36,7 @@ services:
       POSTGRES_PASSWORD: ${PGPASSWORD}
       POSTGRES_DB: ${PGDATABASE}
     ports:
-      - "${PGPORT}:${PGPORT}"
+      - '${PGPORT}:${PGPORT}'
     healthcheck:
       test: pg_isready -U ${PGUSER} -p ${PGPORT} -d ${PGDATABASE}
       interval: 1s

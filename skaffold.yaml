@@ -4,9 +4,9 @@ metadata:
   name: consents-api-node
 build:
   artifacts:
-  - image: docker.io/kazirashid/consents-api-node
-    docker:
-      dockerfile: Dockerfile
+    - image: docker.io/kazirashid/consents-api-node
+      docker:
+        dockerfile: Dockerfile
   tagPolicy:
     gitCommit:
       variant: AbbrevCommitSha
@@ -15,11 +15,11 @@ build:
 manifests:
   helm:
     releases:
-    - name: consents-api-node
-      chartPath: helm
-      setValueTemplates:
-        image.registry: '{{.IMAGE_DOMAIN}}'
-        image.repository: '{{.IMAGE_REPO_NO_DOMAIN}}'
-        image.tag: '{{.IMAGE_TAG}}@{{.IMAGE_DIGEST}}'
+      - name: consents-api-node
+        chartPath: helm
+        setValueTemplates:
+          image.registry: '{{.IMAGE_DOMAIN}}'
+          image.repository: '{{.IMAGE_REPO_NO_DOMAIN}}'
+          image.tag: '{{.IMAGE_TAG}}@{{.IMAGE_DIGEST}}'
 deploy:
   helm: {}

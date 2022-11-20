@@ -1,3 +1,4 @@
 {
-  "*.ts": ["prettier --list-different", "eslint", "jest --findRelatedTests"]
+  "*.{ts,js}": ["prettier --write", "eslint --fix", "jest --findRelatedTests"],
+  "*.{json,md}": "prettier --write"
 }

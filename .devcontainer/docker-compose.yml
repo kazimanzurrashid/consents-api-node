@@ -1,4 +1,4 @@
-version: "3.8"
+version: '3.8'
 
 services:
   api:
@@ -26,7 +26,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_LOGIN_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_LOGIN_PASSWORD}
     ports:
-      - "${PGADMIN_PORT}:80"
+      - '${PGADMIN_PORT}:80'
   postgres:
     image: postgres:14.5-alpine3.16
     environment:
@@ -34,7 +34,7 @@ services:
       POSTGRES_PASSWORD: ${PGPASSWORD}
       POSTGRES_DB: ${PGDATABASE}
     ports:
-      - "${PGPORT}:${PGPORT}"
+      - '${PGPORT}:${PGPORT}'
     volumes:
       - postgres-data:/var/lib/postgresql/data
     restart: unless-stopped
