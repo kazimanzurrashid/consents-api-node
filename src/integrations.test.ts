@@ -8,8 +8,8 @@ import Pino from 'pino';
 import { container } from 'tsyringe';
 import { Client, Pool } from 'pg';
 
+import type { StartedPostgreSqlContainer } from 'testcontainers';
 import { PostgreSqlContainer } from 'testcontainers';
-import type { StartedPostgreSqlContainer } from 'testcontainers/dist/modules/postgresql/postgresql-container';
 
 import request from 'supertest';
 import type { Response } from 'supertest';
