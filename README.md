@@ -1,6 +1,6 @@
 # In order to run
 
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/kazimanzurrashid/consents-api-node/CI)](https://github.com/kazimanzurrashid/consents-api-node/actions)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/kazimanzurrashid/consents-api-node/ci.yml)](https://github.com/kazimanzurrashid/consents-api-node/actions)
 [![CodeFactor](https://www.codefactor.io/repository/github/kazimanzurrashid/consents-api-node/badge)](https://www.codefactor.io/repository/github/kazimanzurrashid/consents-api-node)
 [![codecov](https://codecov.io/gh/kazimanzurrashid/consents-api-node/branch/main/graph/badge.svg)](https://codecov.io/gh/kazimanzurrashid/consents-api-node)
 
