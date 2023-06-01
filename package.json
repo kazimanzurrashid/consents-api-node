@@ -17,7 +17,7 @@
     "test": "jest",
     "coverage": "jest --ci --coverage",
     "build": "rimraf build && tsc",
-    "pack": "rimraf dist && ncc build --source-map",
+    "pack": "rimraf dist && ncc build ./src/index.ts --source-map --target es2021 --external pg-cloudflare",
     "copy-other-required-files": "ts-node copy-other-required-files.ts",
     "release": "release-it",
     "start": "nodemon src/index.ts"
