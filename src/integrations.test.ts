@@ -258,7 +258,7 @@ describe('integrations', () => {
       beforeAll(async () => {
         await runApp(async (app) => {
           const response = await request(app).get(
-            `/users/${faker.datatype.uuid()}`
+            `/users/${faker.string.uuid()}`
           );
 
           statusCode = response.statusCode;
@@ -344,7 +344,7 @@ describe('integrations', () => {
             .post('/events')
             .send({
               user: {
-                id: faker.datatype.uuid()
+                id: faker.string.uuid()
               },
               consents: [
                 {
