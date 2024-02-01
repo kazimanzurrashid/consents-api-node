@@ -23,7 +23,7 @@ jobs:
         run: |
           npm run coverage
       - name: Upload coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: DockerHub Login
