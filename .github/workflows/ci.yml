@@ -41,7 +41,7 @@ jobs:
             type=sha,format=short,prefix=
           images: ${{ secrets.DOCKERHUB_USERNAME }}/consents-api-node
       - name: Push Image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           push: ${{ github.event_name == 'push' }}
           tags: ${{ steps.image-meta.outputs.tags }}
