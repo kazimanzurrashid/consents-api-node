@@ -30,7 +30,7 @@
     "pino": "^9.1.0",
     "reflect-metadata": "^0.2.2",
     "swagger-ui-express": "^5.0.1",
-    "tsyringe": "^4.8.0",
+    "tsyringe": "^4.9.1",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
